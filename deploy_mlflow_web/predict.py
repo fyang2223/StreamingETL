@@ -1,13 +1,17 @@
 import mlflow
+import os
 from flask import Flask, request, jsonify
 
+os.environ['AWS_PROFILE'] = 'iamadmin'
 
-TRACKING_SERVER = "http://localhost:5000"
-RUN_ID = "7230d0e2c52d48b8bbf9d1d4b1525e9e"
-MODEL_URI = f"s3://mlflow-forest/1/{RUN_ID}/artifacts/models"
+RUN_ID = "4302f22a1a7b4ce9a25a99b04bca2f0f"
+MODEL_URI = f"s3://mlflow-forest/2/{RUN_ID}/artifacts/models"
 
-# mlflow.set_tracking_uri(TRACKING_SERVER)
 model = mlflow.pyfunc.load_model(model_uri=MODEL_URI)
+
+def prepare_features(features):
+    features['t1t2'] = features['t1'] * features['t2']
+    return features
 
 def predict(features):
     pred = model.predict(features)
@@ -19,10 +23,11 @@ app = Flask('duration-prediction')
 @app.route('/predict', methods=['POST'])
 def predict_endpoint():
     features = request.get_json()
-    pred = predict(features)
+    features = prepare_features(features)
+    pred = model.predict(features)
 
     result = {
-        'duration': int(pred)
+        'cnt': int(pred)
     }
 
     return jsonify(result)
@@ -30,4 +35,5 @@ def predict_endpoint():
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=9696)
+
 

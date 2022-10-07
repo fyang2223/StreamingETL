@@ -1,20 +1,15 @@
-import predict
 import requests
 
-data = {
-    "data": {"Age":29, 
-             "Pclass":3, 
-             "Fare":4},
-    "id": 123
+features = {
+    "t1":2, 
+    "t2":3,
+    "hum":50,
+    "weather_code":2
 }
-
-data = [{'Age':29, 'Pclass':1, 'Fare':20},
-        {'Age':29, 'Pclass':3, 'Fare':4}]
-data = {"Age":29, "Pclass":3, "Fare":4}
 
 url = 'http://localhost:9696/predict'
 
-response = requests.post(url, json=data)
+response = requests.post(url, json=features)
 
 print(response.json())
 
