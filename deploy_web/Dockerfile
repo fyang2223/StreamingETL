@@ -10,5 +10,5 @@ RUN pipenv install --system --deploy
 
 EXPOSE 9696
 
-COPY ["predict.py", "log_reg.bin", "./"]
+COPY ["predict.py", "pipe.bin", "./"]
 ENTRYPOINT [ "python", "predict.py" ]

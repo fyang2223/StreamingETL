@@ -1,18 +1,18 @@
 import pickle
 from flask import Flask, request, jsonify
 
-with open('log_reg.bin', 'rb') as model:
-    (dv, lr) = pickle.load(model)
+with open('pipe.bin', 'rb') as model:
+    (dv,ct,lr) = pickle.load(model)
+
+def prepare_features(features):
+    features['t1t2'] = features['t1'] * features['t2']
+    return features
 
 def predict(features):
-    # transform [{'feature1':int, 'feature2':int}, {'feature1':int, 'feature2':int}] into matrix
     features = dv.transform(features)
-
+    features = ct.transform(features)
     pred = lr.predict(features)
-
     return pred[0]
-
-
 
 
 app = Flask('duration-prediction')
@@ -20,10 +20,11 @@ app = Flask('duration-prediction')
 @app.route('/predict', methods=['POST'])
 def predict_endpoint():
     features = request.get_json()
+    features = prepare_features(features)
     pred = predict(features)
 
     result = {
-        'duration': int(pred)
+        'cnt': int(pred)
     }
 
     return jsonify(result)
