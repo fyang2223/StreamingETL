@@ -1,25 +1,17 @@
 import json
 import base64
 import boto3
-import mlflow
-import os
-
-# os.environ['AWS_DEFAULT_REGION'] = os.getenv('AWS_DEFAULT_REGION', 'us-east-1')
 
 CLIENT = boto3.client('kinesis')
-RUN_ID = os.getenv('RUN_ID', '4302f22a1a7b4ce9a25a99b04bca2f0f')
-OUTPUT_STREAM = os.getenv('OUTPUT_STREAM', 'bike-prediction-output-stream')
-MODEL_URI = f"s3://mlflow-forest/2/{RUN_ID}/artifacts/models"
-
-model = mlflow.pyfunc.load_model(model_uri=MODEL_URI)
+OUTPUT_STREAM = 'bike-predictions'
 
 def prepare_features(features):
     features['t1t2'] = features['t1'] * features['t2']
     return features
 
 def predict(features):
-    pred = model.predict(features)
-    return int(pred[0])
+
+    return 1
 
 def lambda_handler(event, context):
     predictions = [] # A list of pred_event objects
@@ -36,11 +28,11 @@ def lambda_handler(event, context):
         
         prediction = predict(features)
         pred_event = {
-            'model': 'test',
-            'version': 'one',
+            "model": "test",
+            "version": "gege",
             "prediction": {
-                'cnt': prediction,
-                'pred_id': pred_id
+                "cnt": prediction,
+                "pred_id": pred_id
             }
         }
         
@@ -51,8 +43,6 @@ def lambda_handler(event, context):
         )
         
         predictions.append(pred_event)
-
-        print(json.dumps(pred_event))
 
     return {
         'predictions': predictions

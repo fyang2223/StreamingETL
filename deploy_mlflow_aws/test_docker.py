@@ -1,8 +1,6 @@
 import os
 import requests
-import lambda_function_ui_nomodel
 
-os.environ["AWS_PROFILE"] = 'iamadmin'
 os.environ["AWS_DEFAULT_REGION"] = 'us-east-1'
 
 event = {
@@ -26,5 +24,6 @@ event = {
     ]
 }
 
-res = lambda_function_ui_nomodel.lambda_handler(event, None)
-print(res)
+url = "http://localhost:8080/2015-03-31/functions/function/invocations"
+response = requests.post(url, json=event)
+print(response.json())

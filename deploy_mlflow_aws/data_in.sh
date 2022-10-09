@@ -1,3 +1,5 @@
+#!/bin/bash
+
 KINESIS_STREAM_INPUT=passenger_events
 
 aws kinesis put-record \
@@ -5,15 +7,13 @@ aws kinesis put-record \
     --partition-key 1 \
     --data '{
         "features": {
-            "Age": 130,
-            "Pclass": 205,
-            "Fare": 3.66
+            "t1": 2,
+            "t2": 3,
+            "hum": 50,
+            "weather_code": 2
         }, 
-        "pred_id": 123
+        "pred_id": 999
     }' \
     --cli-binary-format raw-in-base64-out \
     --profile iamadmin
-
-
-
 

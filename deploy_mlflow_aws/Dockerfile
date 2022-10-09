@@ -9,4 +9,6 @@ RUN pipenv install --system --deploy
 
 COPY [ "lambda_function.py", "./" ]
 
-CMD [ "lambda_function.lambda_handler" ]
+# [Lambda-specific only] 
+# Set the CMD to our handler function. This should be <filename>.<functioname> with your respective values.
+CMD [ "lambda_function.lambda_handler" ] 
